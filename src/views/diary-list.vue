@@ -21,7 +21,10 @@
               <div class="time">
                 <span class="date">
                   <b-icon icon="clock-history"></b-icon>
-                  {{item.submitdate}}
+                  <!-- <router-link to='viewjournal/"+" ' tag="li" class="navContent" for="navContent">
+              <a href="javascript:void(0)">{{item.submitdate}}</a>
+            </router-link>  -->
+            {{item.submitdate}}
                 </span>
               </div>
             </div>
@@ -33,7 +36,7 @@
 </template>
 
 <script>
-import { eventBus } from "../main.js";
+//import { eventBus } from "../main.js";
 import axios from "axios";
 export default {
   data() {
@@ -50,8 +53,8 @@ export default {
       this.$router.push({ name: "addjournal" });
     },
     viewjournal(id) {
-      eventBus.$emit("viewjournalTest", id);
-      this.$router.push({ name: "viewjournal" });
+      this.$router.push({ name: 'viewjournal', params: { id: id } })
+
     },
     formatText(text) {
       return text.substr(0, 110);

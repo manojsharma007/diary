@@ -25,7 +25,7 @@ const router = new Router({
       component: diarylist
     },
     {
-      path: '/viewjournal',
+      path: '/viewjournal/:id',
       name: 'viewjournal',
       component: viewjournal
     },

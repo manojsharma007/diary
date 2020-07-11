@@ -22,17 +22,20 @@ const router = new Router({
     {
       path: '/diarylist',
       name: 'diarylist',
-      component: diarylist
+      component: diarylist,
+      meta: {requiresAuth: true}
     },
     {
       path: '/viewjournal/:id',
       name: 'viewjournal',
-      component: viewjournal
+      component: viewjournal,
+      meta: {requiresAuth: true}
     },
     {
       path: '/addjournal',
       name: 'addjournal',
-      component: addjournal
+      component: addjournal,
+      meta: {requiresAuth: true}
     },
 
     {
@@ -42,5 +45,41 @@ const router = new Router({
     }
   ]
 })
-
+router.beforeEach( (to,from,next)=>{
+  // Allow finishing callback url for logging in
+  if(to.matched.some(record=>record.path == "/login")){
+   console.log("router.beforeEach found /login url");
+   //Store.dispatch('auth0HandleAuthentication');
+   next(false);
+ }
+ 
+  // check if user is logged in (start assuming the user is not logged in = false)
+  let routerAuthCheck = false; 
+  // Verify all the proper access variables are present for proper authorization
+  if( localStorage.getItem('userDetails') ){
+    console.log('found local storage tokens');
+    // set localAuthTokenCheck true if unexpired / false if expired
+    routerAuthCheck = true; 
+    
+  }
+ 
+  //Store.commit('setUser', userDetails); 
+   // check if the route to be accessed requires authorizaton
+   if (to.matched.some(record => record.meta.requiresAuth)) {
+     // Check if user is Authenticated
+     if(routerAuthCheck){
+       // user is Authenticated - allow access
+       next();
+     }
+     else{
+       // user is not authenticated - redirect to login
+       router.push('/login');
+     }
+     
+   }
+   // Allow page to load 
+   else{
+     next();
+   }
+ });
 export default router

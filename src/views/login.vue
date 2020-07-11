@@ -65,9 +65,7 @@
      mounted() {
        if(localStorage.getItem('userDetails')){
           this.$router.push({ name: 'diarylist' })
-       }
-
-    
+       }   
          
   },
     computed: {
@@ -95,14 +93,14 @@
         if (this.$v.form.$anyError) {
           return
         }
-        if (this.form.username == 'todo' && this.form.password == 'todomanoj') {
-          this.$router.push({ name: 'diarylist' })
+        if (this.form.username == 'todo' && this.form.password == 'todomanoj') {          
           localStorage.setItem('userDetails', JSON.stringify(this.form))
           this.$toastr.Add({
             name: 'UniqName', // this is give you ability to use removeByName method
             msg: 'you are successfully logged in', // Toast Message
             type: 'success' // Toast type,
           })
+          this.$router.push({ name: 'diarylist' })
           this.errormsg = false
         } else {
           this.errormsg = true

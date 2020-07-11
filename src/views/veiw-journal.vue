@@ -7,8 +7,8 @@
           <b-button variant="info" style="width: 130px" @click="addjournal">Add journal </b-button>
         </b-col>
       </b-row>
-
     </div>
+    
     <div class="main-wrapper">
       <section class="blog-list">
 
@@ -18,7 +18,7 @@
 
         <div class="row">
 
-          <div class="intro viewjournal">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. </div>
+          <div class="intro viewjournal">{{journalData}}</div>
 
         </div>
         <b-row class="text-center">
@@ -36,24 +36,24 @@
 </template>
 
 <script>
-
+//import Vue from 'vue'
   import { eventBus } from '../main.js'
-  //import Vue from 'vue';
-  //Vue.forceUpdate();
+  import axios from "axios";
+  //import diary from "./diary-list"
   export default {
     data() {
       return {
-        journalData: []
+        journalData: "dfafsfa",
+         apiURL: "https://diary.manojksharma.in/"
       }
+    },
+    components:{
+     // diary
     },
     created() {
       eventBus.$off('viewjournalTest')
-      eventBus.$on('viewjournalTest', data => {
-        this.$forceUpdate();
-      //  console.log('i am in viewjournal called')
-        this.journalData = data
-        this.$forceUpdate();
-        //console.log(this.journalData)
+      eventBus.$on('viewjournalTest', id => {
+       this.getJournalById(id)     
       })
     },
     methods: {
@@ -62,7 +62,28 @@
       },
       addjournal() {
         this.$router.push({ name: 'addjournal' })
-      }
+      },
+    async getJournalById(id) {
+      await axios
+        .get(this.apiURL + "database.php?type=get&id="+id, {
+          headers: {}
+        })
+        .then(res => {
+          this.journalData = res.data[0].textitem;
+          this.$data.journalData;
+          this.$forceUpdate()
+          console.log(this.journalData)
+          this.$forceUpdate();
+          Object.assign(this.$data,this.$options.data.call(this))
+          this.$forceUpdate();
+
+        
+
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
     }
   }
 

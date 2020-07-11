@@ -24,10 +24,12 @@
 <script>
 
   import { VueEditor } from 'vue2-editor'
+    import axios from "axios";
   export default {
     data() {
       return {
-        content: ''
+        content: '',
+        apiURL: "https://diary.manojksharma.in/"
       }
     },
     components: {
@@ -39,32 +41,17 @@
       const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long', day: '2-digit' })
       const [{ value: month },,{ value: day },,{ value: year }] = dateTimeFormat .formatToParts(submitDate )
      const timeAdded = this.dateFormat() +" ," +`${month} ${day}, ${year}`
-    //  console.log(timeAdded)
-
-
-      //  const today = new Date()
-      //  const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
-        let localStorageData = []
-        localStorageData = localStorage.getItem('addjournal')
-        let segment = JSON.parse(localStorageData)
-        if (segment != null) {
-          segment.push({
-            id: Math.floor(Math.random() * 100000 + 1),
-            text: this.content,
-            time:timeAdded
+       axios
+          .get(this.apiURL + "database.php?type=add&text=" + this.content+ "&time="+timeAdded, {
+            headers: {}
           })
-          localStorageData = segment
-        } else {
-          segment = [
-            {
-              id: Math.floor(Math.random() * 100000 + 1),
-              text: this.content,
-              time:timeAdded
-            }
-          ]
-        }
-        localStorage.setItem('addjournal', JSON.stringify(segment))
-        this.$router.push({ name: 'diarylist' })
+          .then(() => {         
+            this.$router.push({ name: 'diarylist' })
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        
       },
       goToDiarylist() {
         this.$router.push({ name: 'diarylist' })

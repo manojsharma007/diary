@@ -107,9 +107,9 @@
 <style scoped>
 
   .signupForm {
-    margin: auto;
-    width: 50%;
-    border: 3px solid gray;
+    margin-top: 50px;
+    width: 100%;
+    border: 2px solid gray;
     padding: 10px;
   }
 

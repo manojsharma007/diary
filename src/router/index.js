@@ -12,13 +12,13 @@ Router.prototype.push = function push(location) {
 };
 const router = new Router({
   mode: 'history',
-
+  base: "",
   routes: [
-    {
-      path: '*',
-      redirect: '/login'
-
-    },
+      {
+        path: '/',
+        name: 'login',
+        component: login
+    },   
     {
       path: '/diarylist',
       name: 'diarylist',

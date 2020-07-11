@@ -62,6 +62,14 @@
         }
       }
     },
+     mounted() {
+       if(localStorage.getItem('userDetails')){
+          this.$router.push({ name: 'diarylist' })
+       }
+
+    
+         
+  },
     computed: {
       isComplete() {
         return this.form.username && this.form.password

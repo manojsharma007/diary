@@ -1,12 +1,5 @@
 <template>
   <div>
-    <div class="submitbutton">
-      <b-row class="text-center">
-        <b-col>
-          <b-button variant="info" style="width: 130px" @click="addjournal">Add journal</b-button>
-        </b-col>
-      </b-row>
-    </div>
     <div class="main-wrapper diarylist">
       <section class="blog-list px-3 py-5 p-md-5">
         <div class="monthname">
@@ -30,7 +23,12 @@
             </div>
           </div>
         </div>
+         <div style="margin-left: 90px;">        
+          <b-button variant="info" style="width: 130px" @click="addjournal">Add journal</b-button>      
+      </div>
       </section>
+     
+   
     </div>
   </div>
 </template>

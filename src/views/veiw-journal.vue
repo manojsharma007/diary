@@ -1,13 +1,6 @@
 <template>
 
-  <div class="viewjr">
-    <div class="submitbutton">
-      <b-row class="text-center">
-        <b-col>
-          <b-button variant="info" style="width: 130px" @click="addjournal">Add journal </b-button>
-        </b-col>
-      </b-row>
-    </div>    
+  <div class="viewjr">   
     <div class="main-wrapper">
       <section class="blog-list">
 
@@ -19,7 +12,10 @@
         </div>
         <b-row class="text-center">
           <b-col>
-            <b-button style="margin:5px;" @click="goToDiarylist" variant="info">Back to List</b-button>
+          <b-button variant="info"  @click="addjournal">Add journal </b-button>
+        </b-col>
+          <b-col>
+            <b-button  @click="goToDiarylist" variant="info">Back to List</b-button>
           </b-col>
         </b-row>
       </section>
@@ -92,6 +88,8 @@ p {
   color: rgb(89, 89, 91);
 }
 .viewjournal{
-      margin-left: 25px;
+         margin-left: 30px;
+    margin-right: 40px;
+    text-align: justify;
 }
 </style>

@@ -7,7 +7,6 @@ import { BootstrapVue ,BootstrapVueIcons  } from 'bootstrap-vue'
 export const eventBus = new Vue();
 Vue.use( BootstrapVue);
 Vue.use( BootstrapVueIcons);
-
 /* == DEFAULT GLOBAL OPTIONS == */
 Vue.use(Toastr, {
   defaultPosition: "toast-top-right",

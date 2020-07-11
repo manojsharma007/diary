@@ -1,11 +1,8 @@
 <template>
 
   <div class="addjournal">
-    <div class="title">
-      <b-button variant="primary">Add journal </b-button>
-    </div>
     <vue-editor v-model="content"></vue-editor>
-    <div class="submitbutton">
+    <div class="submitbuttonaddview">
 
       <b-row class="text-center">
         <b-col>
@@ -37,7 +34,7 @@
     },
     methods: {
       savejournal() {
-      const submitDate = new Date('2010-08-05')
+      const submitDate = new Date()
       const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long', day: '2-digit' })
       const [{ value: month },,{ value: day },,{ value: year }] = dateTimeFormat .formatToParts(submitDate )
      const timeAdded = this.dateFormat() +" ," +`${month} ${day}, ${year}`
@@ -79,7 +76,7 @@
     margin: 15px;
     color: blue;
   }
-  .submitbutton {
+  .submitbuttonaddview {
     margin: 15px 96px 0 93px;
   }
 

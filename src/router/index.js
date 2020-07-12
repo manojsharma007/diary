@@ -48,7 +48,7 @@ const router = new Router({
 router.beforeEach( (to,from,next)=>{
   // Allow finishing callback url for logging in
   if(to.matched.some(record=>record.path == "/login")){
-   console.log("router.beforeEach found /login url");
+   //console.log("router.beforeEach found /login url");
    //Store.dispatch('auth0HandleAuthentication');
    next(false);
  }
@@ -57,7 +57,7 @@ router.beforeEach( (to,from,next)=>{
   let routerAuthCheck = false; 
   // Verify all the proper access variables are present for proper authorization
   if( localStorage.getItem('userDetails') ){
-    console.log('found local storage tokens');
+   // console.log('found local storage tokens');
     // set localAuthTokenCheck true if unexpired / false if expired
     routerAuthCheck = true; 
     

@@ -14,9 +14,6 @@
               <div class="time">
                 <span class="date">
                   <b-icon icon="clock-history"></b-icon>
-                  <!-- <router-link to='viewjournal/"+" ' tag="li" class="navContent" for="navContent">
-              <a href="javascript:void(0)">{{item.submitdate}}</a>
-            </router-link>  -->
             {{item.submitdate}}
                 </span>
               </div>
@@ -24,7 +21,8 @@
           </div>
         </div>
          <div style="margin-left: 90px;">        
-          <b-button variant="info" style="width: 130px" @click="addjournal">Add journal</b-button>      
+          <b-button variant="info" style="width: 130px" @click="addjournal"><b-icon-plus>
+            </b-icon-plus>Add journal</b-button>      
       </div>
       </section>
      
@@ -34,8 +32,7 @@
 </template>
 
 <script>
-//import { eventBus } from "../main.js";
-import axios from "axios";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -46,28 +43,34 @@ export default {
   mounted() {
     this.getTask();
   },
+  computed: {
+    // GET THE ALL TABLES DATA FROM GETTER
+    ...mapGetters({
+      JournalsData: "filters/getJournalsData"
+    })
+  },
   methods: {
+    ...mapActions({
+      commitJournals: "filters/getJournals",
+       commitUpdateJournals: "filters/commitUpdateJournal"
+    }),
     addjournal() {
+      this.commitUpdateJournals([])
       this.$router.push({ name: "addjournal" });
     },
     viewjournal(id) {
-      this.$router.push({ name: 'viewjournal', params: { id: id } })
-
+      this.$router.push({ name: "viewjournal", params: { id: id } });
     },
     formatText(text) {
-      return text.substr(0, 110);
+      if (text) {
+        return text.substr(0, 110);
+      }
     },
     async getTask() {
-      await axios
-        .get(this.apiURL + "database.php", {
-          headers: {}
-        })
-        .then(res => {
-          this.listItems = res.data;
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      if (Object.keys(this.JournalsData).length === 0) {
+        await this.commitJournals();
+      }
+      this.listItems = this.JournalsData.data;
     }
   }
 };

@@ -3,19 +3,22 @@
   <div class="viewjr">   
     <div class="main-wrapper">
       <section class="blog-list">
-
         <div class="monthname">
           <h4>June 2020</h4>
         </div>
         <div class="row">
-          <div class="intro viewjournal" v-html=listItems[0].textitem></div>
+          <div class="intro viewjournal" v-html=listItems.textitem></div>
         </div>
-        <b-row class="text-center">
+        <b-row class="text-center footer">
           <b-col>
-          <b-button variant="info"  @click="addjournal">Add journal </b-button>
+          <b-button variant="info" style="margin-right:-68px"  @click="editJournal">Edit journal </b-button>
+        </b-col>
+            <b-col>
+          <b-button variant="danger" style="margin-right:0 0px 0 12px"  @click="deleteJournal">Delete </b-button>
         </b-col>
           <b-col>
-            <b-button  @click="goToDiarylist" variant="info">Back to List</b-button>
+            <b-button  @click="goToDiarylist" class="backbutton" variant="info">
+              Back to List</b-button>
           </b-col>
         </b-row>
       </section>
@@ -23,7 +26,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import { mapGetters,mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -31,25 +34,35 @@ export default {
         {
           textitem: ""
         }
-      ],
-      apiURL: "https://diary.manojksharma.in/"
+      ]
     };
   },
-  mounted() {
-    axios
-      .get(this.apiURL + "database.php?type=get&id=" + this.$route.params.id, {
-        headers: {}
-      })
-      .then(res => {
-        this.listItems = res.data;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  computed: {
+    // GET THE ALL TABLES DATA FROM GETTER
+    ...mapGetters({
+      JournalsData: "filters/getJournalsData",
+    })
+  },
+  created() {
+    let filterData = this.JournalsData.data.find(
+      item => item.id == this.$route.params.id
+    );
+
+    this.listItems = filterData;
   },
   methods: {
-    addjournal() {
+        ...mapActions({
+      commitUpdateJournals: "filters/commitUpdateJournal",
+       deleteJournals: "filters/deleteJournals"
+
+    }),
+    editJournal() {
+     this.commitUpdateJournals(this.listItems)
       this.$router.push({ name: "addjournal" });
+    },
+   async deleteJournal(){
+    await this.deleteJournals(this.listItems);
+    this.$router.push({ name: "diarylist" });
     },
     viewjournal() {
       this.$router.push({ name: "viewjournal" });
@@ -87,9 +100,19 @@ export default {
 p {
   color: rgb(89, 89, 91);
 }
-.viewjournal{
-         margin-left: 30px;
-    margin-right: 40px;
-    text-align: justify;
+.viewjournal {
+  margin-left: 30px;
+  margin-right: 40px;
+  text-align: justify;
+}
+.footer {
+  border-top: 1px solid;
+  margin-top: 5px;
+  padding-top: 10px;
+}
+.backbutton{
+      margin: 1px 0 0 -21px;
+    padding: 4px 8px 7px 13px;
+    float: left;
 }
 </style>

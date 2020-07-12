@@ -1,16 +1,18 @@
 <template>
 
   <div class="addjournal">
+ 
     <vue-editor v-model="content"></vue-editor>
     <div class="submitbuttonaddview">
-
       <b-row class="text-center">
         <b-col>
-          <b-button variant="primary" @click="savejournal">Save </b-button>
+          <b-button variant="primary" style="margin-left: -21px ;width: 80px" @click="saveUpdateJournal">
+            {{SaveUpdateText}} </b-button>
         </b-col>
 
         <b-col>
-          <b-button variant="info" style="width: 130px" @click="goToDiarylist">Go to Diary </b-button>
+          <b-button variant="info" style="width: 150px" @click="goToDiarylist">
+             <b-icon-skip-backward></b-icon-skip-backward>&nbsp;&nbsp;Go to Diary </b-button>
         </b-col>
       </b-row>
 
@@ -19,65 +21,104 @@
 
 </template>
 <script>
+import { VueEditor } from "vue2-editor";
+import { mapActions, mapGetters } from "vuex";
+//import {EventBus} from "../main"
+export default {
+  data() {
+    return {
+      content: "",
+      updateButton: true,
+      SaveUpdateText:"Save"
+    };
+  },
+  computed: {
+    // GET THE ALL TABLES DATA FROM GETTER
+    ...mapGetters({
+      getUpdateJournalsData: "filters/getUpdateJournalsData"
+    })
+  },
+  components: {
+    VueEditor
+  },
+  created() {
+    if (this.getUpdateJournalsData.length == 0) {
+      this.updateButton = true;
+      this.SaveUpdateText="Save"
+    } else {
+      this.content = this.getUpdateJournalsData.textitem;
+      this.SaveUpdateText="Update"
+      this.updateButton = false;
+    }
+  },
+  methods: {
+    ...mapActions({
+      addJournals: "filters/addJournals",
+       updateJournals: "filters/updateJournals"
+    }),
+    async saveUpdateJournal() {
+      const submitDate = new Date();
+      const dateTimeFormat = new Intl.DateTimeFormat("en", {
+        year: "numeric",
+        month: "long",
+        day: "2-digit"
+      });
+      const [
+        { value: month },
+        ,
+        { value: day },
+        ,
+        { value: year }
+      ] = dateTimeFormat.formatToParts(submitDate);
+      const timeAdded = this.dateFormat() + " ," + `${month} ${day}, ${year}`;
+      let parms = {
+        content: this.content,
+        time: timeAdded
+      };
+      if (
+        this.content == null ||
+        this.content == undefined ||
+        this.content.length == 0
+      ) {
+        alert("Please enter the text ");
+      } else {
 
-  import { VueEditor } from 'vue2-editor'
-    import axios from "axios";
-  export default {
-    data() {
-      return {
-        content: '',
-        apiURL: "https://diary.manojksharma.in/"
+        if(this.updateButton==true){
+          await this.addJournals(parms);
+        }
+        else
+        {
+           this.getUpdateJournalsData.content=this.content;
+          await this.updateJournals(this.getUpdateJournalsData);
+        }
+      this.$router.push({ name: "diarylist" });
       }
     },
-    components: {
-      VueEditor
+    goToDiarylist() {
+      this.$router.push({ name: "diarylist" });
     },
-    methods: {
-      savejournal() {
-      const submitDate = new Date()
-      const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long', day: '2-digit' })
-      const [{ value: month },,{ value: day },,{ value: year }] = dateTimeFormat .formatToParts(submitDate )
-     const timeAdded = this.dateFormat() +" ," +`${month} ${day}, ${year}`
-       axios
-          .get(this.apiURL + "database.php?type=add&text=" + this.content+ "&time="+timeAdded, {
-            headers: {}
-          })
-          .then(() => {         
-            this.$router.push({ name: 'diarylist' })
-          })
-          .catch(err => {
-            console.log(err);
-          });
-        
-      },
-      goToDiarylist() {
-        this.$router.push({ name: 'diarylist' })
-      },
-      dateFormat(){
-        const date = new Date()
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0'+minutes : minutes;
-        var strTime = hours + ':' + minutes + ' ' + ampm;
-        return strTime;
-      }
+    dateFormat() {
+      const date = new Date();
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      var strTime = hours + ":" + minutes + " " + ampm;
+      return strTime;
     }
   }
-
+};
 </script>
 
 <style>
-
-  .title {
-    text-align: center;
-    margin: 15px;
-    color: blue;
-  }
-  .submitbuttonaddview {
-    margin: 15px 96px 0 93px;
-  }
-
+.title {
+  text-align: center;
+  margin: 15px;
+  color: blue;
+}
+.submitbuttonaddview {
+  margin: 18px 173px 1px 090px;
+}
 </style>

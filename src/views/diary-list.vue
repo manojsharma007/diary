@@ -2,6 +2,10 @@
   <div>
     <div class="main-wrapper diarylist">
       <section class="blog-list px-3 py-5 p-md-5">
+            <div style="margin: 6px 0 15px 108px;">        
+          <b-button variant="info" style="width: 130px" @click="addjournal"><b-icon-plus>
+            </b-icon-plus>Add journal</b-button>      
+      </div>
         <div class="monthname">
           <h4>June 2020</h4>
         </div>
@@ -19,11 +23,7 @@
               </div>
             </div>
           </div>
-        </div>
-         <div style="margin-left: 90px;">        
-          <b-button variant="info" style="width: 130px" @click="addjournal"><b-icon-plus>
-            </b-icon-plus>Add journal</b-button>      
-      </div>
+        </div>     
       </section>
      
    

@@ -6,13 +6,13 @@
     <div class="submitbuttonaddview">
       <b-row class="text-center">
         <b-col>
-          <b-button variant="primary" style="margin-left: -21px ;width: 80px" @click="saveUpdateJournal">
+          <b-button :disabled="disable" variant="primary" style="margin-left: -21px ;width: 80px" @click="saveUpdateJournal">
             {{SaveUpdateText}} </b-button>
         </b-col>
 
         <b-col>
-          <b-button variant="info" style="width: 150px" @click="goToDiarylist">
-             <b-icon-skip-backward></b-icon-skip-backward>&nbsp;&nbsp;Go to Diary </b-button>
+          <b-button variant="info" style="width: 110px" @click="goToDiarylist">
+             Go to Diary </b-button>
         </b-col>
       </b-row>
 
@@ -29,7 +29,8 @@ export default {
     return {
       content: "",
       updateButton: true,
-      SaveUpdateText:"Save"
+      SaveUpdateText:"Save",
+      disable:false
     };
   },
   computed: {
@@ -82,7 +83,7 @@ export default {
       ) {
         alert("Please enter the text ");
       } else {
-
+         this.disable=true;
         if(this.updateButton==true){
           await this.addJournals(parms);
         }

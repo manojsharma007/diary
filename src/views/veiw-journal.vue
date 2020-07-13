@@ -3,10 +3,17 @@
   <div class="viewjr">   
     <div class="main-wrapper">
       <section class="blog-list">
-        <div class="monthname">
+        <!-- <div class="monthname">
           <h4>June 2020</h4>
-        </div>
-        <div class="row">
+        </div> -->
+        
+        <div class="row box-shadow-full">
+          <div class="timeview">
+                <span class="date">
+                  <b-icon icon="clock-history"></b-icon>
+                   {{listItems.submitdate}} , Place : Hydrabad
+                </span>
+          </div>
           <div class="intro viewjournal" v-html=listItems.textitem></div>
         </div>
         <b-row class="text-center footer">
@@ -17,7 +24,7 @@
           <b-button variant="danger" style="margin-right:0 0px 0 12px"  @click="deleteJournal">Delete </b-button>
         </b-col>
           <b-col>
-            <b-button  @click="goToDiarylist" class="backbutton" variant="info">
+            <b-button style="margin-left:-34px" @click="goToDiarylist" class="backbutton" variant="info">
               Back to List</b-button>
           </b-col>
         </b-row>
@@ -26,7 +33,7 @@
   </div>
 </template>
 <script>
-import { mapGetters,mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -40,7 +47,7 @@ export default {
   computed: {
     // GET THE ALL TABLES DATA FROM GETTER
     ...mapGetters({
-      JournalsData: "filters/getJournalsData",
+      JournalsData: "filters/getJournalsData"
     })
   },
   created() {
@@ -51,18 +58,17 @@ export default {
     this.listItems = filterData;
   },
   methods: {
-        ...mapActions({
+    ...mapActions({
       commitUpdateJournals: "filters/commitUpdateJournal",
-       deleteJournals: "filters/deleteJournals"
-
+      deleteJournals: "filters/deleteJournals"
     }),
     editJournal() {
-     this.commitUpdateJournals(this.listItems)
+      this.commitUpdateJournals(this.listItems);
       this.$router.push({ name: "addjournal" });
     },
-   async deleteJournal(){
-    await this.deleteJournals(this.listItems);
-    this.$router.push({ name: "diarylist" });
+    async deleteJournal() {
+      await this.deleteJournals(this.listItems);
+      this.$router.push({ name: "diarylist" });
     },
     viewjournal() {
       this.$router.push({ name: "viewjournal" });
@@ -82,7 +88,6 @@ export default {
   flex-wrap: wrap;
   margin-right: 0px;
   margin-left: -15px;
-  border-bottom: 1px gray solid;
   text-align: justify;
   margin-bottom: 10px;
 }
@@ -97,22 +102,32 @@ export default {
 .diarylist {
   margin: -33px 0 0 0;
 }
-p {
-  color: rgb(89, 89, 91);
-}
+
 .viewjournal {
-  margin-left: 30px;
-  margin-right: 40px;
-  text-align: justify;
+      margin-left: 15px;
+    margin-right: 15px;
+    text-align: justify;
 }
 .footer {
-  border-top: 1px solid;
-  margin-top: 5px;
-  padding-top: 10px;
+  margin-top: -20px;
 }
-.backbutton{
-      margin: 1px 0 0 -21px;
-    padding: 4px 8px 7px 13px;
-    float: left;
+.backbutton {
+  margin: 1px 0 0 -21px;
+  padding: 4px 8px 7px 13px;
+  float: left;
+}
+.box-shadow-full {
+  position: relative;
+  z-index: 2;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.06),
+    0 2px 5px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.06), 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+  margin: 20px 14px 40px 13px;
+}
+.timeview {
+  margin: 25px;
+  border-bottom: 1px gray solid;
+  width: 100%;
+  font-size: 12px;
 }
 </style>

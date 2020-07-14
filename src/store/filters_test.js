@@ -1,5 +1,5 @@
 import axios from "axios";
-let apiURL ="https://diary.manojksharma.in/database.php?";
+let apiURL ="https://diary.manojksharma.in/";
 export default {
   namespaced: true,
   state: {
@@ -34,7 +34,7 @@ export default {
      })     
     },
     async addJournals({ commit }, params) {  
-      return await axios.get(apiURL + "type=add&text=" + params.content+ "&time="+params.time)
+      return await axios.get(apiURL + "database_test.php?type=add&text=" + params.content+ "&time="+params.time)
       .then((response)=>{
         commit("setJournalsData", response);
       })
@@ -43,7 +43,7 @@ export default {
       })     
      },
      async updateJournals({ commit }, params) {  
-      return await axios.get(apiURL + "type=update&text=" + params.content+ "&id="+params.id)
+      return await axios.get(apiURL + "database_test.php?type=update&text=" + params.content+ "&id="+params.id)
       .then((response)=>{
         commit("setJournalsData", response);
       })
@@ -52,7 +52,7 @@ export default {
       })     
      },
      async deleteJournals({ commit }, params) {
-     return await axios.get(apiURL + "type=delete&id=" + params.id)
+     return await axios.get(apiURL + "database_test.php?type=delete&id=" + params.id)
      .then((response)=>{
        commit("setJournalsData", response);
      })

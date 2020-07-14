@@ -21,7 +21,7 @@
           <b-button variant="info" style="margin-right:-68px"  @click="editJournal">Edit journal </b-button>
         </b-col>
             <b-col>
-          <b-button variant="danger" style="margin-right:0 0px 0 12px"  @click="deleteJournal">Delete </b-button>
+          <b-button variant="danger" style="margin-right:0 0px 0 12px" :disabled="disable"  @click="deleteJournal">Delete </b-button>
         </b-col>
           <b-col>
             <b-button style="margin-left:-34px" @click="goToDiarylist" class="backbutton" variant="info">
@@ -41,7 +41,8 @@ export default {
         {
           textitem: ""
         }
-      ]
+      ],
+      disable:false
     };
   },
   computed: {
@@ -51,10 +52,16 @@ export default {
     })
   },
   created() {
-    let filterData = this.JournalsData.data.find(
-      item => item.id == this.$route.params.id
-    );
-
+    let filterData = [];
+    if (this.JournalsData.data) {
+      filterData = this.JournalsData.data.find(
+        item => item.id == this.$route.params.id
+      );
+      localStorage.setItem("journalView", JSON.stringify(filterData));
+    } else {
+      let aa = JSON.parse(localStorage.getItem("journalView"));
+      filterData = aa;
+    }
     this.listItems = filterData;
   },
   methods: {
@@ -67,8 +74,11 @@ export default {
       this.$router.push({ name: "addjournal" });
     },
     async deleteJournal() {
+      if(confirm('are you sure?')){
+      this.disable=true;
       await this.deleteJournals(this.listItems);
       this.$router.push({ name: "diarylist" });
+      }     
     },
     viewjournal() {
       this.$router.push({ name: "viewjournal" });
@@ -104,12 +114,12 @@ export default {
 }
 
 .viewjournal {
-      margin-left: 15px;
-    margin-right: 15px;
-    text-align: justify;
+  margin-left: 15px;
+  margin-right: 15px;
+  text-align: justify;
 }
 .footer {
-  margin-top: -20px;
+  min-height: 70px !important;
 }
 .backbutton {
   margin: 1px 0 0 -21px;
@@ -117,12 +127,11 @@ export default {
   float: left;
 }
 .box-shadow-full {
-  position: relative;
-  z-index: 2;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.06),
-    0 2px 5px 0 rgba(0, 0, 0, 0.2);
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.06), 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-  margin: 20px 14px 40px 13px;
+    position: relative;
+    z-index: 2;
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.06), 0 2px 5px 0 rgba(0,0,0,.2);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.06), 0 2px 5px 0 rgba(0,0,0,.2);
+    margin: 20px 14px 13px 13px;
 }
 .timeview {
   margin: 25px;

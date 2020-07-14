@@ -7,13 +7,13 @@
       </div>
       <div class="allentries">
         <ul>
-        <li  class="allentriesul">65 <br/>Entries</li>
-        <li class="allentriesul">26 <br/>Month</li>
-        <li  class="allentriesul">5 <br/>Week</li>
+        <li  class="allentriesul">{{totalRecords}} <br/>Entries</li>
+        <li class="allentriesul">{{currentMonthRecords}} <br/>Month</li>
+        <li  class="allentriesul">{{currentWeekRecords}} <br/>Week</li>
       </ul>
       </div>
         <div class="monthname">
-          <h4>July 2020</h4>
+          <h4>{{currentMonth}}</h4>
         </div>
          <b-spinner style="width: 3rem; height: 3rem;margin: 52px 0 23px 141px;" v-if="showLoder" variant="primary"  label="Large Spinner">
            Loading...</b-spinner>
@@ -41,16 +41,29 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-//import moment from "moment";
+import moment from "moment";
 export default {
   data() {
     return {
       listItems: [],
-      showLoder: true
+      showLoder: true,
+      totalRecords: "",
+      currentMonth: "",
+      currentMonthRecords:"",
+      currentWeekRecords:""
     };
   },
   mounted() {
     this.getTask();
+    const submitDate = new Date();
+    const dateTimeFormat = new Intl.DateTimeFormat("en", {
+      year: "numeric",
+      month: "long"
+    });
+    const [{ value: month }, , { value: year }] = dateTimeFormat.formatToParts(
+      submitDate
+    );
+    this.currentMonth = `${month} , ${year}`;
   },
   computed: {
     // GET THE ALL TABLES DATA FROM GETTER
@@ -83,27 +96,27 @@ export default {
         this.showLoder = false;
       }
       this.listItems = this.JournalsData.data;
+      this.totalRecords=this.JournalsData.data.length
 
-      // console.log(this.JournalsData)
-      //moment(value.createddate).isBetween("02-01-2020", "02-29-2020")
-      //console.log(data);
+      let format = "YYYY-MM-DD"
+      var curr_date = moment(moment(), format);
+      var in_month = this.JournalsData.data.filter(item =>
+        moment(item.createddate, format).month() == curr_date.month() &&
+        moment(item.createddate, format).year() == curr_date.year()
+      );
+      this.currentMonthRecords=in_month.length
 
-      //  switch (activeTab) {
-      //     case "articles":
-      //       this.setTableData("article");
-      //       break;
-      //     case "sections":
-      //       this.setTableData("section");
-      //       break;
-      //     case "otherproduct":
-      //       this.setTableData("otherproduct");
-      //       break;
-      //     case "newsletters":
-      //       this.setTableData("newsletter");
-      //       break;
-      //     default:
-      //       this.setTableData("article");
-      //   }
+      const today = moment();
+      const from_date = today.startOf('week').format(format);
+      const to_date = today.endOf('week').format(format);
+
+       var in_week = this.JournalsData.data.filter(item =>
+        moment(item.createddate).isBetween(from_date, to_date)
+      );
+       this.currentWeekRecords=in_week.length;
+     
+
+
     }
   }
 };

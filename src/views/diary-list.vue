@@ -7,7 +7,7 @@
       </div>
       <div class="allentries">
         <ul>
-        <li  class="allentriesul">{{totalRecords}} <br/>Entries Year</li>
+        <li  class="allentriesul">{{totalRecords}} <br/>Entries Year 2020</li>
         <li class="allentriesul">{{currentMonthRecords}} <br/>Month</li>
         <li  class="allentriesul">{{currentWeekRecords}} <br/>Week</li>
       </ul>

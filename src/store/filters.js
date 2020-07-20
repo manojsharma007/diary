@@ -1,6 +1,5 @@
 import axios from "axios";
-let apiURL ="https://diary.manojksharma.in/database.php";
-//let apiURL ="http://localhost/database.php";
+let apiURL ="http://localhost:3000/api/";
 export default {
   namespaced: true,
   state: {
@@ -25,17 +24,30 @@ export default {
     }
   },
   actions: {
-    async getJournals({ commit }) {  
-     return await axios.get(apiURL)
-     .then((response)=>{
-      commit("setJournalsData", response);
-     })
-     .catch((error)=>{     
-        console.log(error);
-     })     
-    },
-    async addJournals({ commit }, params) {  
-      return await axios.get(apiURL + "?type=add&text=" + params.content+ "&time="+params.time)
+    // async getJournals({ commit }) {  
+    //  return await axios.get(apiURL+"getJournals")
+    //  .then((response)=>{
+    //   commit("setJournalsData", response);
+    //  })
+    //  .catch((error)=>{     
+    //     console.log(error);
+    //  })     
+    // },
+    async getJournals({ commit },parms) {  
+      console.log(parms)
+      return await axios.post(apiURL+"getJournal",parms)
+      .then((response)=>{
+       commit("setJournalsData", response);
+      })
+      .catch((error)=>{     
+         console.log(error);
+      })     
+     },
+    async addJournals({ commit }, params) {
+      return await axios.post(apiURL + "addJournal",{
+        "textitem":params.content,
+        "date": params.time
+      })
       .then((response)=>{
         commit("setJournalsData", response);
       })
@@ -44,7 +56,11 @@ export default {
       })     
      },
      async updateJournals({ commit }, params) {  
-      return await axios.get(apiURL + "?type=update&text=" + params.content+ "&id="+params.id)
+       // + params.content+ "&id="+params.id
+      return await axios.post(apiURL + "updateJournal",{
+        "textitem":params.content,
+        "id": params.id
+      })
       .then((response)=>{
         commit("setJournalsData", response);
       })
@@ -53,7 +69,9 @@ export default {
       })     
      },
      async deleteJournals({ commit }, params) {
-     return await axios.get(apiURL + "?type=delete&id=" + params.id)
+     return await axios.post(apiURL + "deleteJournal",{
+      "id": params.id
+    })
      .then((response)=>{
        commit("setJournalsData", response);
      })

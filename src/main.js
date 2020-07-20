@@ -5,6 +5,9 @@ import store from './store'
 import Toastr from 'vue-toastr'
 import { BootstrapVue ,BootstrapVueIcons  } from 'bootstrap-vue'
 export const eventBus = new Vue();
+import VueObserveVisibility from 'vue-observe-visibility'
+ 
+Vue.use(VueObserveVisibility)
 Vue.use( BootstrapVue);
 Vue.use( BootstrapVueIcons);
 export const EventBus = new Vue();

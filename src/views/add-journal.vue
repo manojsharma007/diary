@@ -1,24 +1,23 @@
 <template>
-
   <div class="addjournal">
- 
     <vue-editor v-model="content"></vue-editor>
     <div class="submitbuttonaddview">
       <b-row class="text-center">
         <b-col>
-          <b-button :disabled="disable" variant="primary" style="margin-left: -21px ;width: 80px" @click="saveUpdateJournal">
-            {{SaveUpdateText}} </b-button>
+          <b-button
+            :disabled="disable"
+            variant="primary"
+            style="margin-left: -21px ;width: 80px"
+            @click="saveUpdateJournal"
+          >{{SaveUpdateText}}</b-button>
         </b-col>
 
         <b-col>
-          <b-button variant="info" style="width: 110px" @click="goToDiarylist">
-             Go to Diary </b-button>
+          <b-button variant="info" style="width: 110px" @click="goToDiarylist">Go to Diary</b-button>
         </b-col>
       </b-row>
-
     </div>
   </div>
-
 </template>
 <script>
 import { VueEditor } from "vue2-editor";
@@ -29,8 +28,8 @@ export default {
     return {
       content: "",
       updateButton: true,
-      SaveUpdateText:"Save",
-      disable:false
+      SaveUpdateText: "Save",
+      disable: false
     };
   },
   computed: {
@@ -45,17 +44,17 @@ export default {
   created() {
     if (this.getUpdateJournalsData.length == 0) {
       this.updateButton = true;
-      this.SaveUpdateText="Save"
+      this.SaveUpdateText = "Save";
     } else {
       this.content = this.getUpdateJournalsData.textitem;
-      this.SaveUpdateText="Update"
+      this.SaveUpdateText = "Update";
       this.updateButton = false;
     }
   },
   methods: {
     ...mapActions({
       addJournals: "filters/addJournals",
-       updateJournals: "filters/updateJournals"
+      updateJournals: "filters/updateJournals"
     }),
     async saveUpdateJournal() {
       const submitDate = new Date();
@@ -83,16 +82,14 @@ export default {
       ) {
         alert("Please enter the text ");
       } else {
-         this.disable=true;
-        if(this.updateButton==true){
+        this.disable = true;
+        if (this.updateButton == true) {
           await this.addJournals(parms);
-        }
-        else
-        {
-           this.getUpdateJournalsData.content=this.content;
+        } else {
+          this.getUpdateJournalsData.content = this.content;
           await this.updateJournals(this.getUpdateJournalsData);
         }
-      this.$router.push({ name: "diarylist" });
+        this.$router.push({ name: "diarylist" });
       }
     },
     goToDiarylist() {

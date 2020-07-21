@@ -21,12 +21,12 @@
             </li>
           </ul>
         </div>
-        <div class="monthname">
+        <!-- <div class="monthname">
           <h4>{{currentMonth}}</h4>
-        </div>
+        </div> -->
         <!-- <div class="result">Items count: {{ items.length }}.</div> -->
         <virtual-list
-          style="height: 360px; overflow-y: auto;"
+          style="height: 500px; overflow-y: auto;"
           :data-key="'id'"
           :data-sources="items"
           :data-component="itemComponent"

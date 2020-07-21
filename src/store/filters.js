@@ -1,5 +1,6 @@
 import axios from "axios";
-let apiURL ="http://localhost:3000/api/";
+//let apiURL ="http://localhost:3000/api/";
+let apiURL ="http://nodeapi.manojksharma.in/api/";
 export default {
   namespaced: true,
   state: {

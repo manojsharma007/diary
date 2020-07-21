@@ -21,11 +21,29 @@
             </li>
           </ul>
         </div>
+        <div class="container" v-for="(item) in items" :key="item.id">
+          <div class="row">
+            <div class="col-12">
+          
+                <div class="intro" v-html="formatText(item.text)"> </div>
+              <a class="more-link" @click="viewjournal(item.id)">
+                <div class="intro" v-html="formatText(item.textitem)"></div>
+              </a>
+              <div class="time">
+                <span class="date"><b-icon icon="clock-history"></b-icon> {{item.time}} , {{item.date}}</span>
+                <span class="date">
+                  <b-icon icon="clock-history"></b-icon>
+                  {{item.submitdate}}
+                </span>
+              </div>
+            </div>
+          </div>
+           
         <!-- <div class="monthname">
           <h4>{{currentMonth}}</h4>
         </div> -->
         <!-- <div class="result">Items count: {{ items.length }}.</div> -->
-        <virtual-list
+        <!-- <virtual-list
           style="height: 500px; overflow-y: auto;"
           :data-key="'id'"
           :data-sources="items"
@@ -34,7 +52,8 @@
            :estimate-size="100"
         >
           <div v-if="showLoder" slot="footer" class="loading-spinner">Loading ...</div>
-        </virtual-list>
+        </virtual-list> -->
+        </div>
       </section>
     </div>
   </div>
@@ -42,12 +61,12 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import VirtualList from "vue-virtual-scroll-list";
-import Item from "./Item";
+//import VirtualList from "vue-virtual-scroll-list";
+//import Item from "./Item";
 export default {
   data() {
     return {
-      itemComponent: Item,
+     // itemComponent: Item,
       showLoder: true,
       totalRecords: "",
       currentMonth: "",
@@ -58,7 +77,9 @@ export default {
       items: []
     };
   },
-  components: { "virtual-list": VirtualList },
+  components: {
+    // "virtual-list": VirtualList 
+    },
   created() {},
   mounted() {
     this.getTask();
@@ -83,6 +104,7 @@ export default {
   methods: {
     ...mapActions({
       commitJournals: "filters/getJournals",
+      getAllJournals :"filters/getAllJournals",
       recordsJournals: "filters/commitRecordsJournals",
       getJournalsScroll: "filters/getJournalsScroll",
       commitUpdateJournals: "filters/commitUpdateJournal"
@@ -108,10 +130,13 @@ export default {
           limitStartPageNo: this.limitStartPageNo,
           limitEndPageNo: this.limitEndPageNo
         };
-        await this.commitJournals(parms);
+        await this.getAllJournals(parms);
       }
       this.items = this.JournalsData;
       this.limitStartPageNo = this.limitStartPageNo + 20;
+    },
+    viewjournal(id) {
+      this.$router.push({ name: "viewjournal", params: { id: id } });
     },
     async onScrollToBottom() {
       // if (Object.keys(this.JournalsData).length === 0) {

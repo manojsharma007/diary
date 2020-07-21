@@ -40,7 +40,16 @@ export default {
 
   },
   actions: {
- 
+    async getAllJournals({ commit },parms) {  
+      console.log(parms)
+      return await axios.get(apiURL+"allJournal")
+      .then((response)=>{
+       commit("setJournalsData", { data: response, meta: false });
+      })
+      .catch((error)=>{     
+         console.log(error);
+      })     
+     },
    async commitRecordsJournals({ commit }) {  
      return await axios.get(apiURL+"records")
      .then((response)=>{

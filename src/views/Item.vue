@@ -1,7 +1,8 @@
 <template>
+
   <div>
     <div class="container">
-      <div class="row">
+      <div class="row">        
         <div class="col-12">
           <a class="more-link" @click="viewjournal(source.id)">
             <div class="intro" v-html="formatText(source.textitem)"></div>
@@ -34,6 +35,9 @@ export default {
       if (text) {
         return text.substr(0, 110);
       }
+    },
+    viewjournal(id) {
+      this.$router.push({ name: "viewjournal", params: { id: id } });
     }
   }
 };

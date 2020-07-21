@@ -53,8 +53,8 @@ export default {
   },
   created() {
     let filterData = [];
-    if (this.JournalsData.data) {
-      filterData = this.JournalsData.data.find(
+    if (this.JournalsData) {
+      filterData = this.JournalsData.find(
         item => item.id == this.$route.params.id
       );
       localStorage.setItem("journalView", JSON.stringify(filterData));

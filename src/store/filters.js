@@ -5,7 +5,9 @@ export default {
   state: {
    
     journalsData:[],
-    updateJournalsData:[]
+    updateJournalsData:[],
+    records:{totalsrecords: 0, weekly: 0, monthly: 0}
+
   },
   getters: {
     getJournalsData(state) {
@@ -13,31 +15,55 @@ export default {
     },
     getUpdateJournalsData(state) {
       return state.updateJournalsData;
+    },
+    getRecordsJournals(state) {
+      return state.records;
     }
   },
   mutations: {
     setJournalsData(state, payload) {
-      state.journalsData = payload;
+      if(payload.meta==false){
+        state.journalsData.push(...payload.data.data);
+      }else
+      {
+        state.journalsData= payload.data.data;
+      }
+      
     },
     setUpdateJournalsData(state, payload) {
       state.updateJournalsData = payload;
+    },
+    setRecordsJournalsData(state, payload) {
+      state.records = payload;
     }
+
   },
   actions: {
-    // async getJournals({ commit }) {  
-    //  return await axios.get(apiURL+"getJournals")
-    //  .then((response)=>{
-    //   commit("setJournalsData", response);
-    //  })
-    //  .catch((error)=>{     
-    //     console.log(error);
-    //  })     
-    // },
+ 
+   async commitRecordsJournals({ commit }) {  
+     return await axios.get(apiURL+"records")
+     .then((response)=>{
+      commit("setRecordsJournalsData", response);
+     })
+     .catch((error)=>{     
+        console.log(error);
+     })     
+    },
     async getJournals({ commit },parms) {  
-      console.log(parms)
+      //console.log(parms)
       return await axios.post(apiURL+"getJournal",parms)
       .then((response)=>{
-       commit("setJournalsData", response);
+       commit("setJournalsData", { data: response, meta: false });
+      })
+      .catch((error)=>{     
+         console.log(error);
+      })     
+     },
+     async getJournalsScroll({ commit },parms) {  
+      //console.log(parms)
+      return await axios.post(apiURL+"getJournal",parms)
+      .then((response)=>{
+       commit("setJournalsData", { data: response, meta: false });
       })
       .catch((error)=>{     
          console.log(error);
@@ -49,7 +75,8 @@ export default {
         "date": params.time
       })
       .then((response)=>{
-        commit("setJournalsData", response);
+        commit("setJournalsData", { data: response, meta: true });
+        
       })
       .catch((error)=>{     
          console.log(error);
@@ -62,7 +89,8 @@ export default {
         "id": params.id
       })
       .then((response)=>{
-        commit("setJournalsData", response);
+        commit("setJournalsData", { data: response, meta: true });    
+          
       })
       .catch((error)=>{     
          console.log(error);
@@ -73,7 +101,7 @@ export default {
       "id": params.id
     })
      .then((response)=>{
-       commit("setJournalsData", response);
+       commit("setJournalsData", { data: response, meta: true });
      })
      .catch((error)=>{     
         console.log(error);

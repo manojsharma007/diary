@@ -24,43 +24,17 @@
         <div class="monthname">
           <h4>{{currentMonth}}</h4>
         </div>
-        <!-- <b-spinner
-          style="width: 3rem; height: 3rem;margin: 52px 0 23px 141px;"
-          v-if="showLoder"
-          variant="primary"
-          label="Large Spinner"
-        >Loading...</b-spinner> -->
-        <!-- <div class="visiblescroll">
-        <div v-observe-visibility="visibilityChanged">
-          <div class="container" v-for="(item) in this.listItems" :key="item.id">
-            <div class="row">
-              <div class="col-12">
-                <a class="more-link" @click="viewjournal(item.id)">
-                  <div class="intro" v-html="formatText(item.textitem)"></div>
-                </a>
-                <div class="time">
-                  <span class="date">
-                    <b-icon icon="clock-history"></b-icon>
-                    {{item.submitdate}} , Place : Hydrabad
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div> -->
-
-    <virtual-list style="height: 360px; overflow-y: auto;"
-  :data-key="'id'"
-  :data-sources="items"
-  :data-component="itemComponent"
-  :estimate-size="20"
-  v-on:tobottom="onScrollToBottom"
->
-  <div slot="footer" class="loading-spinner">Loading ...</div>
-</virtual-list>
-
-
+        <!-- <div class="result">Items count: {{ items.length }}.</div> -->
+        <virtual-list
+          style="height: 360px; overflow-y: auto;"
+          :data-key="'id'"
+          :data-sources="items"
+          :data-component="itemComponent"
+          v-on:tobottom="onScrollToBottom"
+           :estimate-size="100"
+        >
+          <div v-if="showLoder" slot="footer" class="loading-spinner">Loading ...</div>
+        </virtual-list>
       </section>
     </div>
   </div>
@@ -68,13 +42,11 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-  import VirtualList from 'vue-virtual-scroll-list'
-import moment from "moment";
-import Item from './Item'
+import VirtualList from "vue-virtual-scroll-list";
+import Item from "./Item";
 export default {
   data() {
     return {
-      listItems: [],
       itemComponent: Item,
       showLoder: true,
       totalRecords: "",
@@ -83,16 +55,14 @@ export default {
       currentWeekRecords: "",
       limitStartPageNo: 0,
       limitEndPageNo: 20,
-      page: 1,
-      page_size: 10,
-      lastpage: 1,
       items: []
-
     };
   },
-  components: { 'virtual-list': VirtualList },
+  components: { "virtual-list": VirtualList },
+  created() {},
   mounted() {
     this.getTask();
+    this.getAllRecords();
     const submitDate = new Date();
     const dateTimeFormat = new Intl.DateTimeFormat("en", {
       year: "numeric",
@@ -106,25 +76,31 @@ export default {
   computed: {
     // GET THE ALL TABLES DATA FROM GETTER
     ...mapGetters({
-      JournalsData: "filters/getJournalsData"
+      JournalsData: "filters/getJournalsData",
+      recordsJournalsData: "filters/getRecordsJournals"
     })
   },
   methods: {
     ...mapActions({
       commitJournals: "filters/getJournals",
+      recordsJournals: "filters/commitRecordsJournals",
+      getJournalsScroll: "filters/getJournalsScroll",
       commitUpdateJournals: "filters/commitUpdateJournal"
     }),
     addjournal() {
       this.commitUpdateJournals([]);
       this.$router.push({ name: "addjournal" });
     },
-    viewjournal(id) {
-      this.$router.push({ name: "viewjournal", params: { id: id } });
-    },
     formatText(text) {
       if (text) {
         return text.substr(0, 110);
       }
+    },
+    async getAllRecords() {
+      await this.recordsJournals();
+      this.totalRecords = this.recordsJournalsData.data.totalsrecords;
+      this.currentMonthRecords = this.recordsJournalsData.data.monthly;
+      this.currentWeekRecords = this.recordsJournalsData.data.weekly;
     },
     async getTask() {
       if (Object.keys(this.JournalsData).length === 0) {
@@ -133,46 +109,25 @@ export default {
           limitEndPageNo: this.limitEndPageNo
         };
         await this.commitJournals(parms);
-        this.showLoder = false;
-      } else {
-        this.showLoder = false;
       }
-      this.listItems = this.JournalsData.data;
-      this.items = this.JournalsData.data;
-      this.totalRecords = this.JournalsData.data.length;
-
-      let format = "YYYY-MM-DD";
-      var curr_date = moment(moment(), format);
-      var in_month = this.JournalsData.data.filter(
-        item =>
-          moment(item.createddate, format).month() == curr_date.month() &&
-          moment(item.createddate, format).year() == curr_date.year()
-      );
-      this.currentMonthRecords = in_month.length;
-
-      const today = moment();
-      const from_date = today.startOf("week").format(format);
-      const to_date = today.endOf("week").format(format);
-
-      var in_week = this.JournalsData.data.filter(item =>
-        moment(item.createddate).isBetween(from_date, to_date)
-      );
-      this.currentWeekRecords = in_week.length;
-      // todo 
-      this.lastpage=5
+      this.items = this.JournalsData;
+      this.limitStartPageNo = this.limitStartPageNo + 20;
     },
-    onScrollToBottom() {
-    
-     // this.getTask();
-      console.log("StartPage :");
-          this.limitStartPageNo+10;
-           this.limitEndPageNo+20;
-             let parms = {
+    async onScrollToBottom() {
+      // if (Object.keys(this.JournalsData).length === 0) {
+      if (this.limitStartPageNo <= this.totalRecords) {
+        let parms = {
           limitStartPageNo: this.limitStartPageNo,
           limitEndPageNo: this.limitEndPageNo
         };
-         this.commitJournals(parms);
-      //console.log("Endpage",this.limitEndPageNo);
+        await this.getJournalsScroll(parms);
+        this.showLoder = true;
+      } else {
+        this.showLoder = false;
+      }
+      // }
+      this.items = this.JournalsData;
+      this.limitStartPageNo = this.limitStartPageNo + 20;
     }
   }
 };
@@ -209,8 +164,8 @@ export default {
 .allentries {
   background: lightsteelblue;
 }
-.visiblescroll{
-height: 300px;
+.visiblescroll {
+  height: 300px;
   overflow: auto;
 }
 </style>

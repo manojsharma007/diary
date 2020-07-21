@@ -22,7 +22,7 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import { mapActions, mapGetters } from "vuex";
-//import {EventBus} from "../main"
+import {EventBus} from "../main"
 export default {
   data() {
     return {
@@ -85,6 +85,7 @@ export default {
         this.disable = true;
         if (this.updateButton == true) {
           await this.addJournals(parms);
+          EventBus.$emit("callRecordAPI");
         } else {
           this.getUpdateJournalsData.content = this.content;
           await this.updateJournals(this.getUpdateJournalsData);

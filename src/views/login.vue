@@ -95,11 +95,11 @@
         }
         if (this.form.username == 'todo' && this.form.password == 'todomanoj') {          
           localStorage.setItem('userDetails', JSON.stringify(this.form))
-          this.$toastr.Add({
-            name: 'UniqName', // this is give you ability to use removeByName method
-            msg: 'you are successfully logged in', // Toast Message
-            type: 'success' // Toast type,
-          })
+          // this.$toastr.Add({
+          //   name: 'UniqName', // this is give you ability to use removeByName method
+          //   msg: 'you are successfully logged in', // Toast Message
+          //   type: 'success' // Toast type,
+          // })
           this.$router.push({ name: 'diarylist' })
           this.errormsg = false
         } else {

@@ -22,7 +22,7 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import { mapActions, mapGetters } from "vuex";
-import {EventBus} from "../main"
+import {EventBus} from "../main";
 export default {
   data() {
     return {

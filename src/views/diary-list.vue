@@ -9,14 +9,17 @@
           <ul>
             <li class="allentriesul">
               {{totalRecords}}
+            <!-- {{recordsJournalsData.data['totalsrecords']}} -->
               <br />Entries
             </li>
             <li class="allentriesul">
               {{currentMonthRecords}}
+               <!-- {{recordsJournalsData.data['monthly']}} -->
               <br />Month
             </li>
             <li class="allentriesul">
               {{currentWeekRecords}}
+                <!-- {{recordsJournalsData.data['weekly']}} -->
               <br />Week
             </li>
           </ul>
@@ -38,21 +41,6 @@
               </div>
             </div>
           </div>
-           
-        <!-- <div class="monthname">
-          <h4>{{currentMonth}}</h4>
-        </div> -->
-        <!-- <div class="result">Items count: {{ items.length }}.</div> -->
-        <!-- <virtual-list
-          style="height: 500px; overflow-y: auto;"
-          :data-key="'id'"
-          :data-sources="items"
-          :data-component="itemComponent"
-          v-on:tobottom="onScrollToBottom"
-           :estimate-size="100"
-        >
-          <div v-if="showLoder" slot="footer" class="loading-spinner">Loading ...</div>
-        </virtual-list> -->
         </div>
       </section>
     </div>
@@ -61,16 +49,14 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-//import VirtualList from "vue-virtual-scroll-list";
-//import Item from "./Item";
+import {EventBus} from "../main";
 export default {
   data() {
     return {
-     // itemComponent: Item,
       showLoder: true,
       totalRecords: "",
       currentMonth: "",
-      currentMonthRecords: "",
+      currentMonthRecords:"",
       currentWeekRecords: "",
       limitStartPageNo: 0,
       limitEndPageNo: 20,
@@ -78,12 +64,17 @@ export default {
     };
   },
   components: {
-    // "virtual-list": VirtualList 
+    
     },
-  created() {},
+ created() {
+   EventBus.$off("callRecordAPI")
+    EventBus.$on("callRecordAPI", () => {
+      alert()
+      this.getTaskAddUpdateDelete();
+    });
+  },
   mounted() {
-    this.getTask();
-    this.getAllRecords();
+    this.getTask();    
     const submitDate = new Date();
     const dateTimeFormat = new Intl.DateTimeFormat("en", {
       year: "numeric",
@@ -105,7 +96,7 @@ export default {
     ...mapActions({
       commitJournals: "filters/getJournals",
       getAllJournals :"filters/getAllJournals",
-      recordsJournals: "filters/commitRecordsJournals",
+     // recordsJournals: "filters/commitRecordsJournals",
       getJournalsScroll: "filters/getJournalsScroll",
       commitUpdateJournals: "filters/commitUpdateJournal"
     }),
@@ -118,11 +109,18 @@ export default {
         return text.substr(0, 110);
       }
     },
-    async getAllRecords() {
-      await this.recordsJournals();
-      this.totalRecords = this.recordsJournalsData.data.totalsrecords;
-      this.currentMonthRecords = this.recordsJournalsData.data.monthly;
-      this.currentWeekRecords = this.recordsJournalsData.data.weekly;
+  async getTaskAddUpdateDelete() {
+       alert("Ff")
+       await this.getAllJournals();
+     
+       
+     
+      console.log(this.JournalsData)
+      this.items = this.JournalsData.data;     
+       this.totalRecords =this.JournalsData.totalsrecords;
+      this.currentMonthRecords = this.JournalsData.monthly;
+      this.currentWeekRecords = this.JournalsData.weekly;  
+
     },
     async getTask() {
       if (Object.keys(this.JournalsData).length === 0) {
@@ -130,10 +128,16 @@ export default {
           limitStartPageNo: this.limitStartPageNo,
           limitEndPageNo: this.limitEndPageNo
         };
-        await this.getAllJournals(parms);
+       await this.getAllJournals(parms);
+      console.log(this.JournalsData)
+      this.items = this.JournalsData.data;     
+       this.totalRecords =this.JournalsData.totalsrecords;
+      this.currentMonthRecords = this.JournalsData.monthly;
+      this.currentWeekRecords = this.JournalsData.weekly;  
+       
       }
-      this.items = this.JournalsData;
-      this.limitStartPageNo = this.limitStartPageNo + 20;
+     
+
     },
     viewjournal(id) {
       this.$router.push({ name: "viewjournal", params: { id: id } });

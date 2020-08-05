@@ -1,14 +1,13 @@
 import axios from "axios";
-//let apiURL ="http://localhost:3000/api/";
-let apiURL ="http://nodeapi.manojksharma.in/api/";
+let apiURL ="http://localhost:3000/api/";
+//let apiURL ="http://nodeapi.manojksharma.in/api/";
 export default {
   namespaced: true,
   state: {
    
     journalsData:[],
     updateJournalsData:[],
-    records:{totalsrecords: 0, weekly: 0, monthly: 0}
-
+    records:[]
   },
   getters: {
     getJournalsData(state) {
@@ -17,18 +16,21 @@ export default {
     getUpdateJournalsData(state) {
       return state.updateJournalsData;
     },
-    getRecordsJournals(state) {
+    getRecordsJournals(state) {     
       return state.records;
     }
   },
   mutations: {
     setJournalsData(state, payload) {
-      if(payload.meta==false){
-        state.journalsData.push(...payload.data.data);
-      }else
-      {
+      
         state.journalsData= payload.data.data;
-      }
+     
+      // if(payload.meta==false){
+      //   state.journalsData.push(...payload.data.data);
+      // }else
+      // {
+      //   state.journalsData= payload.data.data;
+      // }
       
     },
     setUpdateJournalsData(state, payload) {
@@ -40,8 +42,7 @@ export default {
 
   },
   actions: {
-    async getAllJournals({ commit },parms) {  
-      console.log(parms)
+    async getAllJournals({ commit }) {  
       return await axios.get(apiURL+"allJournal")
       .then((response)=>{
        commit("setJournalsData", { data: response, meta: false });
@@ -53,6 +54,9 @@ export default {
    async commitRecordsJournals({ commit }) {  
      return await axios.get(apiURL+"records")
      .then((response)=>{
+      // localStorage.setItem("totals",JSON.stringify(response.data["totalsrecords"]));
+      // localStorage.setItem("monthly",JSON.stringify(response.data["monthly"]));
+      // localStorage.setItem("weekly",JSON.stringify(response.data["weekly"]));
       commit("setRecordsJournalsData", response);
      })
      .catch((error)=>{     

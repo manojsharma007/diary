@@ -34,6 +34,7 @@
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
+import {EventBus} from "../main";
 export default {
   data() {
     return {
@@ -77,6 +78,7 @@ export default {
       if(confirm('are you sure?')){
       this.disable=true;
       await this.deleteJournals(this.listItems);
+       EventBus.$emit("callRecordAPI");
       this.$router.push({ name: "diarylist" });
       }     
     },
